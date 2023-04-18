@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:vibration/vibration.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 
 void main() => runApp(const MyApp());
@@ -28,35 +30,24 @@ class MyPageView extends StatefulWidget {
 
 class _MyPageViewState extends State<MyPageView> {
   final PageController _controller = PageController();
-  int _currentPageIndex = 0;
+  final FlutterTts flutterTts = FlutterTts();
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onPageViewScrolled);
   }
 
   @override
   void dispose() {
-    _controller.removeListener(_onPageViewScrolled);
-    _controller.dispose();
     super.dispose();
-  }
-
-  void _onPageViewScrolled() {
-    final newPageIndex = _controller.page?.round() ?? 0;
-    if (newPageIndex != _currentPageIndex) {
-      setState(() {
-        _currentPageIndex = newPageIndex;
-      });
-      HapticFeedback.vibrate();
-    }
   }
 
   @override
   Widget build(BuildContext context) {
+    flutterTts.setPitch(1.0);
     return PageView(
       controller: _controller,
+      onPageChanged: _recognisePage,
       children: const <Widget>[
         Center(
           child: Text('First Page'),
@@ -70,4 +61,26 @@ class _MyPageViewState extends State<MyPageView> {
       ],
     );
   }
+
+  _recognisePage(int a) async {
+    final hasVibrator = await Vibration.hasCustomVibrationsSupport();
+    if (a == 0) {
+      await flutterTts.speak("Object detection");
+      if (hasVibrator != null && hasVibrator) {
+        Vibration.vibrate(amplitude: 128, duration: 500);
+      }
+    } else if (a == 1) {
+      if (hasVibrator != null && hasVibrator) {
+        Vibration.vibrate(amplitude: 128, duration: 1400);
+      }
+      await flutterTts.speak("Text Extraction from images");
+    } else if (a == 2) {
+      if (hasVibrator != null && hasVibrator) {
+        Vibration.vibrate(amplitude: 128, duration: 1800);
+      }
+      await flutterTts.speak("Currency Identifier");
+    }
+  }
 }
+
+
