@@ -1,9 +1,11 @@
+import 'package:asvi/ImageToText/ImgtoText.dart';
 import 'package:asvi/OjectDetection/ObjectDetectorView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vibration/vibration.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+
 
 List<CameraDescription> cameras = [];
 
@@ -12,7 +14,7 @@ Future<void> main() async {
 
   cameras = await availableCameras();
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -20,11 +22,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Vibrate Demo',
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: const MyPageView(),
+        body: MyPageView(),
       ),
     );
   }
@@ -59,10 +61,8 @@ class _MyPageViewState extends State<MyPageView> {
       onPageChanged: _recognisePage,
       children:  <Widget>[
         ObjectDetectorView(),
-        Center(
-          child: Text('Second Page'),
-        ),
-        Center(
+        const MainScreen(),
+        const Center(
           child: Text('Third Page'),
         ),
       ],
