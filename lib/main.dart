@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vibration/vibration.dart';
+import 'package:flutter_tts/flutter_tts.dart';
+
 
 void main() => runApp(const MyApp());
 
@@ -12,63 +14,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Vibrate Demo',
       home: Scaffold(
-        appBar: AppBar(title: const Text('Envision')),
+        appBar: AppBar(title: const Text('Vibrate Demo')),
         body: const MyPageView(),
       ),
     );
   }
 }
 
-
-
-enum HapticFeedbackType {
-  lightImpact,
-  mediumImpact,
-  heavyImpact,
-  selectionClick,
-  vibrate,
-}
-
-class HapticFeedbackButton extends StatelessWidget {
-  final String text;
-  final HapticFeedbackType feedbackType;
-  final VoidCallback onPressed;
-
-  const HapticFeedbackButton({
-    Key? key,
-    required this.text,
-    required this.onPressed,
-    this.feedbackType = HapticFeedbackType.selectionClick,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      child: Text(text),
-      onPressed: () async {
-        switch (feedbackType) {
-          case HapticFeedbackType.lightImpact:
-            await HapticFeedback.lightImpact();
-            break;
-          case HapticFeedbackType.mediumImpact:
-            await HapticFeedback.mediumImpact();
-            break;
-          case HapticFeedbackType.heavyImpact:
-            await HapticFeedback.heavyImpact();
-            break;
-          case HapticFeedbackType.selectionClick:
-            await HapticFeedback.selectionClick();
-            break;
-          case HapticFeedbackType.vibrate:
-            await HapticFeedback.vibrate();
-            break;
-        }
-
-        onPressed();
-      },
-    );
-  }
-}
 class MyPageView extends StatefulWidget {
   const MyPageView({Key? key}) : super(key: key);
 
@@ -78,41 +30,24 @@ class MyPageView extends StatefulWidget {
 
 class _MyPageViewState extends State<MyPageView> {
   final PageController _controller = PageController();
-  int _currentPageIndex = 0;
+  final FlutterTts flutterTts = FlutterTts();
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_onPageViewScrolled);
   }
 
   @override
   void dispose() {
-    _controller.removeListener(_onPageViewScrolled);
-    _controller.dispose();
     super.dispose();
   }
 
-  void _onPageViewScrolled() async {
-  final newPageIndex = _controller.page?.round() ?? 0;
-  if (newPageIndex != _currentPageIndex) {
-    setState(() {
-      _currentPageIndex = newPageIndex;
-    });
-    
-    bool? hasVibrator = await Vibration.hasVibrator();
-    if (hasVibrator == true && _currentPageIndex==1) {
-      Vibration.vibrate(duration: 100);
-    }else if(hasVibrator == true && _currentPageIndex==2){Vibration.vibrate(duration: 500);}else if(hasVibrator == true && _currentPageIndex==0){Vibration.vibrate(duration: 800);} else {
-      print('Device does not have a vibrator');
-    }
-  }
-}
-
   @override
   Widget build(BuildContext context) {
+    flutterTts.setPitch(1.0);
     return PageView(
       controller: _controller,
+      onPageChanged: _recognisePage,
       children: const <Widget>[
         Center(
           child: Text('First Page'),
@@ -125,5 +60,25 @@ class _MyPageViewState extends State<MyPageView> {
         ),
       ],
     );
+  }
+
+  _recognisePage(int a) async {
+    final hasVibrator = await Vibration.hasCustomVibrationsSupport();
+    if (a == 0) {
+      await flutterTts.speak("Object detection");
+      if (hasVibrator != null && hasVibrator) {
+        Vibration.vibrate(amplitude: 128, duration: 500);
+      }
+    } else if (a == 1) {
+      if (hasVibrator != null && hasVibrator) {
+        Vibration.vibrate(amplitude: 128, duration: 1400);
+      }
+      await flutterTts.speak("Text Extraction from images");
+    } else if (a == 2) {
+      if (hasVibrator != null && hasVibrator) {
+        Vibration.vibrate(amplitude: 128, duration: 1800);
+      }
+      await flutterTts.speak("Currency Identifier");
+    }
   }
 }
