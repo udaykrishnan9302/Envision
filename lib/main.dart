@@ -5,6 +5,8 @@ import 'package:vibration/vibration.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
+import 'CurrencyDetection/image_label_view.dart';
+
 List<CameraDescription> cameras = [];
 
 Future<void> main() async {
@@ -62,9 +64,7 @@ class _MyPageViewState extends State<MyPageView> {
         Center(
           child: Text('Second Page'),
         ),
-        Center(
-          child: Text('Third Page'),
-        ),
+        ImageLabelView(),
       ],
     );
   }
