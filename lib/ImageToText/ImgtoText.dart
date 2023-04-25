@@ -2,9 +2,12 @@ import 'dart:io';
 
 import 'package:asvi/ImageToText/result_screen.dart';
 import 'package:camera/camera.dart';
+import 'package:asvi/camera_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import '../main.dart';
 
 
 class MainScreen extends StatefulWidget {
@@ -18,7 +21,6 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   bool _isPermissionGranted = false;
 
   late final Future<void> _future;
-  CameraController? _cameraController;
 
   final textRecognizer = TextRecognizer();
 
@@ -26,29 +28,25 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    if (!cameraController!.value.isInitialized) {
+      initCameraController(cameras[0]);
+    }
 
     _future = _requestCameraPermission();
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _stopCamera();
-    textRecognizer.close();
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (_cameraController == null || !_cameraController!.value.isInitialized) {
+    if (cameraController == null || !cameraController!.value.isInitialized) {
       return;
-    }
-
-    if (state == AppLifecycleState.inactive) {
-      _stopCamera();
-    } else if (state == AppLifecycleState.resumed &&
-        _cameraController != null &&
-        _cameraController!.value.isInitialized) {
+    }else if (state == AppLifecycleState.resumed &&
+        cameraController != null &&
+        cameraController!.value.isInitialized) {
       _startCamera();
     }
   }
@@ -65,10 +63,8 @@ Widget build(BuildContext context) {
               future: availableCameras(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  _initCameraController(snapshot.data!);
-
                   return Positioned.fill(
-                    child: CameraPreview(_cameraController!),
+                    child: CameraPreview(cameraController!),
                   );
                 } else {
                   return const LinearProgressIndicator();
@@ -118,46 +114,21 @@ Widget build(BuildContext context) {
   }
 
   void _startCamera() {
-    if (_cameraController != null) {
-      _cameraSelected(_cameraController!.description);
+    if (cameraController != null) {
+      _cameraSelected(cameraController!.description);
     }
   }
 
-  void _stopCamera() {
-    if (_cameraController != null) {
-      _cameraController?.dispose();
-    }
-  }
-
-  void _initCameraController(List<CameraDescription> cameras) {
-    if (_cameraController != null) {
-      return;
-    }
-
-    // Select the first rear camera.
-    CameraDescription? camera;
-    for (var i = 0; i < cameras.length; i++) {
-      final CameraDescription current = cameras[i];
-      if (current.lensDirection == CameraLensDirection.back) {
-        camera = current;
-        break;
-      }
-    }
-
-    if (camera != null) {
-      _cameraSelected(camera);
-    }
-  }
 
   Future<void> _cameraSelected(CameraDescription camera) async {
-    _cameraController = CameraController(
+    cameraController = CameraController(
       camera,
       ResolutionPreset.max,
       enableAudio: false,
     );
 
-    await _cameraController!.initialize();
-    await _cameraController!.setFlashMode(FlashMode.off);
+    await cameraController!.initialize();
+    await cameraController!.setFlashMode(FlashMode.off);
 
     if (!mounted) {
       return;
@@ -166,12 +137,12 @@ Widget build(BuildContext context) {
   }
 
   Future<void> _scanImage() async {
-    if (_cameraController == null) return;
+    if (cameraController == null) return;
 
     final navigator = Navigator.of(context);
 
     try {
-      final pictureFile = await _cameraController!.takePicture();
+      final pictureFile = await cameraController!.takePicture();
 
       final file = File(pictureFile.path);
 

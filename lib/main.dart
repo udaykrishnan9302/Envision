@@ -1,3 +1,4 @@
+import 'package:asvi/ImageToText/ImgtoText.dart';
 import 'package:asvi/OjectDetection/ObjectDetectorView.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 import 'CurrencyDetection/image_label_view.dart';
+import 'camera_controller.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -13,6 +15,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   cameras = await availableCameras();
+  await initCameraController(cameras[0]);;
 
   runApp(MyApp());
 }
@@ -48,10 +51,6 @@ class _MyPageViewState extends State<MyPageView> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +60,8 @@ class _MyPageViewState extends State<MyPageView> {
       onPageChanged: _recognisePage,
       children:  <Widget>[
         ObjectDetectorView(),
-        Center(
-          child: Text('Second Page'),
-        ),
         ImageLabelView(),
+        MainScreen(),
       ],
     );
   }
