@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:asvi/camera_controller.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,6 @@ class CameraView extends StatefulWidget {
 
 class _CameraViewState extends State<CameraView> {
   ScreenMode _mode = ScreenMode.liveFeed;
-  CameraController? _controller;
   File? _image;
   String? _path;
   ImagePicker? _imagePicker;
@@ -140,7 +140,7 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Widget _liveFeedBody() {
-    if (_controller?.value.isInitialized == false) {
+    if (cameraController?.value.isInitialized == false) {
       return Container();
     }
 
@@ -149,7 +149,7 @@ class _CameraViewState extends State<CameraView> {
     // this is actually size.aspectRatio / (1 / camera.aspectRatio)
     // because camera preview size is received as landscape
     // but we're calculating for portrait orientation
-    var scale = size.aspectRatio * _controller!.value.aspectRatio;
+    var scale = size.aspectRatio * cameraController!.value.aspectRatio;
 
     // to prevent scaling down, invert the value
     if (scale < 1) scale = 1 / scale;
@@ -166,7 +166,7 @@ class _CameraViewState extends State<CameraView> {
                   ? Center(
                 child: const Text('Changing camera lens'),
               )
-                  : CameraPreview(_controller!),
+                  : CameraPreview(cameraController!),
             ),
           ),
           if (widget.customPaint != null) widget.customPaint!,
@@ -263,32 +263,20 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Future _startLiveFeed() async {
-    final camera = cameras[_cameraIndex];
-    _controller = CameraController(
-      camera,
-      ResolutionPreset.high,
-      enableAudio: false,
-    );
-    _controller?.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      _controller?.getMinZoomLevel().then((value) {
+
+    cameraController?.getMinZoomLevel().then((value) {
         zoomLevel = value;
         minZoomLevel = value;
       });
-      _controller?.getMaxZoomLevel().then((value) {
+    cameraController?.getMaxZoomLevel().then((value) {
         maxZoomLevel = value;
       });
-      _controller?.startImageStream(_processCameraImage);
+    cameraController?.startImageStream(_processCameraImage);
       setState(() {});
-    });
   }
 
   Future _stopLiveFeed() async {
-    await _controller?.stopImageStream();
-    await _controller?.dispose();
-    _controller = null;
+    await cameraController?.stopImageStream();
   }
 
   Future _switchLiveCamera() async {
