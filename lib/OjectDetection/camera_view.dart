@@ -17,6 +17,7 @@ class CameraView extends StatefulWidget {
         required this.customPaint,
         this.text,
         required this.onImage,
+        required this.mode,
         this.onScreenModeChanged,
         this.initialDirection = CameraLensDirection.back})
       : super(key: key);
@@ -27,6 +28,7 @@ class CameraView extends StatefulWidget {
   final Function(InputImage inputImage) onImage;
   final Function(ScreenMode mode)? onScreenModeChanged;
   final CameraLensDirection initialDirection;
+  final ScreenMode mode;
 
   @override
   State<CameraView> createState() => _CameraViewState();
@@ -46,6 +48,7 @@ class _CameraViewState extends State<CameraView> {
   @override
   void initState() {
     super.initState();
+    _mode = widget.mode;
 
     _imagePicker = ImagePicker();
 
@@ -131,7 +134,7 @@ class _CameraViewState extends State<CameraView> {
     if (_mode == ScreenMode.liveFeed) {
       body = _liveFeedBody();
     } else {
-      body = _galleryBody();
+      body = galleryBody();
     }
     return body;
   }
@@ -191,7 +194,7 @@ class _CameraViewState extends State<CameraView> {
     );
   }
 
-  Widget _galleryBody() {
+  Widget galleryBody() {
     return ListView(shrinkWrap: true, children: [
       _image != null
           ? SizedBox(

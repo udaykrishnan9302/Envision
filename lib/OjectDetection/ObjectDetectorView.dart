@@ -40,6 +40,7 @@ class _ObjectDetectorView extends State<ObjectDetectorView> {
   Widget build(BuildContext context) {
     return CameraView(
       title: 'Object Detector',
+      mode: ScreenMode.liveFeed,
       customPaint: _customPaint,
       text: _text,
       onImage: (inputImage) {
