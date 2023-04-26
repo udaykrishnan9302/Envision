@@ -1,7 +1,6 @@
 import 'package:asvi/ImageToText/ImgtoText.dart';
 import 'package:asvi/OjectDetection/ObjectDetectorView.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:vibration/vibration.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_tts/flutter_tts.dart';
@@ -15,7 +14,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   cameras = await availableCameras();
-  await initCameraController(cameras[0]);;
+  await initCameraController(cameras[0]);
 
   runApp(const MyApp());
 }
@@ -60,8 +59,8 @@ class _MyPageViewState extends State<MyPageView> {
       onPageChanged: _recognisePage,
       children:  <Widget>[
         ObjectDetectorView(),
-        ImageLabelView(),
-        MainScreen(),
+        const ImageLabelView(),
+        const TextRecogView(),
       ],
     );
   }
@@ -77,12 +76,12 @@ class _MyPageViewState extends State<MyPageView> {
       if (hasVibrator != null && hasVibrator) {
         Vibration.vibrate(amplitude: 128, duration: 1400);
       }
-      await flutterTts.speak("Text Extraction from images");
+      await flutterTts.speak("Currency Identifier");
     } else if (a == 2) {
       if (hasVibrator != null && hasVibrator) {
         Vibration.vibrate(amplitude: 128, duration: 1800);
       }
-      await flutterTts.speak("Currency Identifier");
+      await flutterTts.speak("Text Extraction from images");
     }
   }
 }

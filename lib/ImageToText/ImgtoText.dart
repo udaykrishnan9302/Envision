@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:asvi/ImageToText/result_screen.dart';
 import 'package:camera/camera.dart';
 import 'package:asvi/camera_controller.dart';
@@ -10,14 +9,14 @@ import 'package:permission_handler/permission_handler.dart';
 import '../main.dart';
 
 
-class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+class TextRecogView extends StatefulWidget {
+  const TextRecogView({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  State<TextRecogView> createState() => _TextRecogViewState();
 }
 
-class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
+class _TextRecogViewState extends State<TextRecogView> with WidgetsBindingObserver {
   bool _isPermissionGranted = false;
 
   late final Future<void> _future;
@@ -73,7 +72,7 @@ Widget build(BuildContext context) {
             ),
           Scaffold(
             appBar: AppBar(
-              title: const Text('Text Recognition Sample'),
+              title: const Text('Text Recognition'),
             ),
             backgroundColor: _isPermissionGranted ? Colors.transparent : null,
             body: Stack(
@@ -138,7 +137,7 @@ Widget build(BuildContext context) {
 
   Future<void> _scanImage() async {
     if (cameraController == null) return;
-
+    
     final navigator = Navigator.of(context);
 
     try {
