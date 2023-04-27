@@ -1,5 +1,5 @@
-import 'package:asvi/ImageToText/ImgtoText.dart';
-import 'package:asvi/OjectDetection/ObjectDetectorView.dart';
+import 'package:Envision/ImageToText/ImgtoText.dart';
+import 'package:Envision/OjectDetection/ObjectDetectorView.dart';
 import 'package:flutter/material.dart';
 import 'package:vibration/vibration.dart';
 import 'package:camera/camera.dart';

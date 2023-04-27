@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'package:asvi/ImageToText/result_screen.dart';
+import 'package:Envision/ImageToText/result_screen.dart';
 import 'package:camera/camera.dart';
-import 'package:asvi/camera_controller.dart';
+import 'package:Envision/camera_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:permission_handler/permission_handler.dart';

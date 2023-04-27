@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:asvi/camera_controller.dart';
+import 'package:Envision/camera_controller.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

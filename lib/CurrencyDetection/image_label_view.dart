@@ -1,18 +1,18 @@
 import 'dart:io' as io;
 import 'dart:developer' as logDev;
 
-import 'package:asvi/main.dart';
+import 'package:Envision/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
 import 'package:path/path.dart' as pathI;
 import 'package:path_provider/path_provider.dart';
-import 'package:asvi/CurrencyDetection/curr_res_screen.dart';
+import 'package:Envision/CurrencyDetection/curr_res_screen.dart';
 
 import '../OjectDetection/camera_view.dart';
 
 import 'package:camera/camera.dart';
-import 'package:asvi/camera_controller.dart';
+import 'package:Envision/camera_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 
