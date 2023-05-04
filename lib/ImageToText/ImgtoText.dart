@@ -73,6 +73,7 @@ Widget build(BuildContext context) {
           Scaffold(
             appBar: AppBar(
               title: const Text('Text Recognition'),
+              backgroundColor: Color.fromARGB(255, 234, 174, 84),
             ),
             backgroundColor: _isPermissionGranted ? Colors.transparent : null,
             body: Stack(

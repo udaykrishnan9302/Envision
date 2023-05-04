@@ -89,6 +89,7 @@ class _CameraViewState extends State<CameraView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        backgroundColor: Color.fromARGB(255, 234, 174, 84),
         actions: [
           if (_allowPicker)
             Padding(

@@ -83,6 +83,7 @@ class _ImageLabelViewState extends State<ImageLabelView> with WidgetsBindingObse
           Scaffold(
             appBar: AppBar(
               title: const Text('Currency Detection'),
+              backgroundColor: Color.fromARGB(255, 234, 174, 84),
             ),
             backgroundColor: _isPermissionGranted ? Colors.transparent : null,
             body: Stack(
